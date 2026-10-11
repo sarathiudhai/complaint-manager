@@ -114,11 +114,11 @@ Passwords are hashed with bcryptjs. Login returns a JWT that the frontend stores
 
 ## 11. Code0 Usage
 
-Code0 was used to inspect the existing application, trace category loading and complaint authorization behavior, plan bounded changes, and assist with implementation and verification. Changes were kept within the requested scope and reviewed before validation.
+Code0 was used throughout the project as an efficient development assistant: to understand and analyze the existing MERN architecture, identify bugs and authorization issues, improve backend behavior, troubleshoot MongoDB Atlas integration and database startup, and resolve category loading and seeding. It also assisted with reviewing and validating changes, improving reliability and maintainability, and troubleshooting issues during development.
 
 ## 12. AI Development Experience
 
-AI assistance helped investigate existing code paths, identify the cause of authorization and category-data issues, and implement targeted backend changes. **Code0 suggestions were reviewed and manually validated** against the code and through the applicable syntax checks, frontend production build, and Atlas seed run. AI-generated output was not treated as verified without review.
+I remained responsible for development decisions and reviewed Code0 suggestions before using them. I manually tested the application and verified relevant changes with code inspection, syntax checks, the frontend production build, and the Atlas seed run. Code0 served as a development partner for analysis and implementation—not a substitute for my review or verification.
 
 ## 13. Specific Code0 Tasks
 
