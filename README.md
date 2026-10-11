@@ -65,6 +65,12 @@ npm install
 npm run seed
 ```
 
+To add the default complaint categories to the database configured by `backend/.env` without clearing existing users, complaints, or categories, run:
+```bash
+npm run seed:categories
+```
+This command requires `MONGO_URI` to be set and only inserts missing default categories.
+
 #### Frontend:
 ```bash
 cd frontend

@@ -7,7 +7,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "seed": "node seed/seedData.js"
+    "seed": "node seed/seedData.js",
+    "seed:categories": "node seed/seedCategories.js",
+    "seed:demo-accounts": "node seed/seedDemoAccounts.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

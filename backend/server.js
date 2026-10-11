@@ -8,9 +8,6 @@ const { apiLimiter } = require('./middleware/rateLimiter');
 // Load env variables
 dotenv.config();
 
-// Connect Database
-connectDB();
-
 const app = express();
 
 // Security CORS setup
@@ -67,9 +64,19 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, () => {
-  console.log(`[ResolveX Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`[ResolveX Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error(`[ResolveX Server] Database connection failed: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {

@@ -1,5 +1,6 @@
 const Complaint = require('../models/Complaint');
 const User = require('../models/User');
+const filterInternalComments = require('../utils/filterInternalComments');
 
 // @desc    Get dashboard statistics tailored by user role
 // @route   GET /api/stats/dashboard
@@ -99,7 +100,7 @@ const getDashboardStats = async (req, res, next) => {
         rejected,
         pending: submitted + assigned + inProgress,
       },
-      recentComplaints,
+      recentComplaints: recentComplaints.map(filterInternalComments),
     });
   } catch (error) {
     next(error);

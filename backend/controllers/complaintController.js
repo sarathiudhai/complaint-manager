@@ -1,6 +1,7 @@
 const Complaint = require('../models/Complaint');
 const User = require('../models/User');
 const generateTicketId = require('../utils/generateTicketId');
+const filterInternalComments = require('../utils/filterInternalComments');
 
 // @desc    Create a new complaint
 // @route   POST /api/complaints
@@ -89,6 +90,8 @@ const getComplaints = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limitNum);
+    const visibleComplaints =
+      req.user.role === 'User' ? complaints.map(filterInternalComments) : complaints;
 
     return res.status(200).json({
       success: true,
@@ -96,7 +99,7 @@ const getComplaints = async (req, res, next) => {
       total,
       page: pageNum,
       pages: Math.ceil(total / limitNum),
-      complaints,
+      complaints: visibleComplaints,
     });
   } catch (error) {
     next(error);
@@ -143,16 +146,19 @@ const getComplaintById = async (req, res, next) => {
 
     if (
       req.user.role === 'Staff' &&
-      complaint.assignedTo &&
-      complaint.assignedTo._id.toString() !== req.user._id.toString() &&
-      req.user.role !== 'Admin'
+      (!complaint.assignedTo ||
+        complaint.assignedTo._id.toString() !== req.user._id.toString())
     ) {
-      // Staff can view if assigned or if searching assigned queue
+      return res.status(403).json({
+        success: false,
+        message: 'You can only view complaints assigned to you.',
+      });
     }
 
     return res.status(200).json({
       success: true,
-      complaint,
+      complaint:
+        req.user.role === 'User' ? filterInternalComments(complaint) : complaint,
     });
   } catch (error) {
     next(error);
@@ -363,13 +369,6 @@ const addComment = async (req, res, next) => {
     const { id } = req.params;
     const { message, isInternal } = req.body;
 
-    if (!message || !message.trim()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Comment message cannot be empty',
-      });
-    }
-
     const complaint = await Complaint.findById(id);
     if (!complaint) {
       return res.status(404).json({
@@ -391,13 +390,26 @@ const addComment = async (req, res, next) => {
 
     if (
       req.user.role === 'Staff' &&
-      complaint.assignedTo &&
-      complaint.assignedTo.toString() !== req.user._id.toString() &&
-      req.user.role !== 'Admin'
+      (!complaint.assignedTo ||
+        complaint.assignedTo.toString() !== req.user._id.toString())
     ) {
       return res.status(403).json({
         success: false,
-        message: 'You are not assigned to this complaint',
+        message: 'You can only comment on complaints assigned to you.',
+      });
+    }
+
+    if (!['User', 'Staff', 'Admin'].includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to comment on this complaint.',
+      });
+    }
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Comment message cannot be empty',
       });
     }
 
@@ -417,7 +429,10 @@ const addComment = async (req, res, next) => {
     return res.status(201).json({
       success: true,
       message: 'Comment added successfully',
-      complaint: updatedComplaint,
+      complaint:
+        req.user.role === 'User'
+          ? filterInternalComments(updatedComplaint)
+          : updatedComplaint,
     });
   } catch (error) {
     next(error);
