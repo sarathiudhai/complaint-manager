@@ -94,6 +94,14 @@ npm run dev
 
 The API defaults to `http://localhost:5000`; Vite serves the frontend at `http://localhost:5173` and proxies `/api` requests to the backend.
 
+### Basic App Flow
+
+1. Sign in with one of the demo accounts listed at the end of this README, or register a new User account.
+2. As a User, open the dashboard, submit a complaint, then track its status and comments under **My Complaints**.
+3. As an Admin, review complaints, manage categories and accounts, and assign complaints to Staff.
+4. As Staff, open the assigned queue, update complaint status, add comments or internal notes, and provide resolution notes.
+5. As a User, view the completed complaint and leave feedback after it is resolved.
+
 ## 9. MongoDB Atlas Setup
 
 1. Create an Atlas cluster and database user.
@@ -128,3 +136,15 @@ I remained responsible for development decisions and reviewed Code0 suggestions 
 - Added non-destructive category seeding for Atlas.
 - Traced the frontend category request through the backend route, controller, model, and seed/database setup; verified the frontend build and seeded the configured Atlas database to resolve the empty category list.
 - Added a non-destructive targeted seeder for the demo Admin and Staff accounts.
+
+## Demo Admin and Staff Login Credentials
+
+Enter these credentials on the Login page. The login form currently uses manual entry; quick-fill controls are not present. These accounts were seeded into the configured Atlas database, but will work only when the application is connected to that database and the accounts remain active.
+
+| Role | Email | Password | Main workflow |
+|---|---|---|---|
+| Admin | `admin@resolvex.com` | `Admin@123` | Manage categories, users, and staff; review and assign complaints |
+| Staff — Technical Support | `staff1@resolvex.com` | `Staff@123` | Work on complaints assigned to Technical Support |
+| Staff — Billing & Accounts | `staff2@resolvex.com` | `Staff@123` | Work on complaints assigned to Billing & Accounts |
+
+These are shared demo credentials for a controlled assessment environment only. Do not use them for a production deployment; replace or disable demo accounts before exposing an environment publicly.

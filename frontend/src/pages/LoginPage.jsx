@@ -39,11 +39,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleDemoFill = (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setError('');
-  };
+
 
   return (
     <div
@@ -144,54 +140,6 @@ const LoginPage = () => {
               {loading ? 'Authenticating...' : 'Sign In'}
             </button>
           </form>
-
-          {/* Quick Demo Credentials Assistant */}
-          <div
-            style={{
-              marginTop: '1.75rem',
-              paddingTop: '1.25rem',
-              borderTop: '1px solid var(--border-color)',
-            }}
-          >
-            <p
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                color: 'var(--text-dim)',
-                marginBottom: '0.75rem',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Quick Test Credentials (Click to Autofill)
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={() => handleDemoFill('user1@resolvex.com', 'User@123')}
-                style={{ fontSize: '0.75rem' }}
-              >
-                User
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={() => handleDemoFill('staff1@resolvex.com', 'Staff@123')}
-                style={{ fontSize: '0.75rem' }}
-              >
-                Staff
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={() => handleDemoFill('admin@resolvex.com', 'Admin@123')}
-                style={{ fontSize: '0.75rem' }}
-              >
-                Admin
-              </button>
-            </div>
-          </div>
 
           <p
             style={{
