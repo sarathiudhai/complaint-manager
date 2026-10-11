@@ -1,139 +1,130 @@
-# ResolveX — Enterprise Complaint Management System
+# ResolveX Complaint Management System
 
-**ResolveX** is a complete, production-ready MERN stack Complaint Management System designed to handle ticket lifecycles, staff assignments, status transitions, role-based security, customer satisfaction ratings, and real-time dashboard analytics.
+## 1. Project Name
 
----
+**ResolveX — Complaint Management System**
 
-## Key Features & User Roles
+## 2. Project Description
 
-### 👤 User Portal
-- **Registration & Authentication**: Public registration (restricted strictly to the `User` role).
-- **Personal Dashboard**: Track submitted complaints, pending issues, in-progress items, and resolved tickets.
-- **Ticket Submission**: Submit complaints with title, description, category, and priority (`Low`, `Medium`, `High`, `Urgent`).
-- **Ticket Tracking**: View detailed ticket timelines, assigned staff details, and status updates.
-- **Interactive Comments**: Communicate directly on complaint tickets with support staff.
-- **Resolution Feedback**: Provide 1-5 star ratings and review comments once tickets are resolved.
+ResolveX is a MERN application for submitting and managing complaints through a ticket lifecycle. It provides separate workflows for end users, support staff, and administrators.
 
-### 🧑‍💻 Staff Portal
-- **Staff Workstation**: View complaints assigned specifically to your department.
-- **Filtering**: Search and filter assigned queue by status (`Assigned`, `In Progress`, `Resolved`, `Rejected`) and priority.
-- **Status Workflow**: Transition tickets to `In Progress` or `Resolved`/`Rejected` with mandatory resolution notes.
-- **Internal Notes**: Post internal progress updates visible only to staff and admins.
+## 3. Key Features
 
-### 🛡️ Admin Portal
-- **Executive Analytics**: Global counters (Total, Pending, In Progress, Resolved, Rejected, Registered Users, Active Staff).
-- **Global Ticket Registry**: Search and filter all system complaints with pagination.
-- **Staff Assignment**: Assign tickets to active staff members with automated audit logs.
-- **Staff Provisioning**: Create new staff accounts with assigned departments.
-- **User Roster**: Manage registered users and toggle account activation status.
-- **Category Management**: Create, edit, and delete complaint categories.
+- User registration, login, and profile updates
+- Complaint submission with category and priority
+- Role-scoped complaint lists, search, and filters
+- Staff assignment and complaint status updates
+- Complaint comments, staff/admin internal notes, and user feedback
+- Role-specific dashboards and summary statistics
+- Admin management of staff, users, and categories
 
----
+## 4. Technology Stack
 
-## 🛠️ Technology Stack
+- **Frontend:** React 18, Vite, React Router, Axios, Lucide React, CSS
+- **Backend:** Node.js, Express 4, JSON Web Tokens, bcryptjs
+- **Database:** MongoDB with Mongoose
+- **Development database fallback:** MongoMemoryServer when no `MONGO_URI` is configured
 
-- **Frontend**: React.js (v18), Vite, React Router DOM (v6), Axios, Lucide React Icons.
-- **Styling**: Vanilla CSS3 design system with custom CSS variables, responsive grid, glassmorphism, and dark SaaS theme.
-- **Backend**: Node.js, Express.js, JWT, bcryptjs, Express Rate Limit, CORS.
-- **Database**: MongoDB with Mongoose (with automated MongoMemoryServer fallback for effortless zero-setup local dev).
+## 5. Project Structure
 
----
+```text
+backend/
+  config/       MongoDB connection
+  controllers/  API request handlers
+  middleware/   Authentication, authorization, errors, and rate limits
+  models/       Mongoose schemas
+  routes/       Express API routes
+  seed/         Demo data and targeted seed scripts
+  utils/        Shared backend utilities
+frontend/
+  src/
+    components/ Reusable UI components
+    context/    Authentication context
+    pages/      Application pages
+    services/   Axios API client
+    styles/     Application styles
+  dist/         Vite build output
+```
 
-## 🚀 Quick Start Guide
+## 6. Setup and Installation
 
-### 1. Prerequisites
-- **Node.js** (v18 or higher)
-- **npm** (v9 or higher)
+Install dependencies separately in the backend and frontend:
 
-### 2. Environment Setup
+```bash
+cd backend
+npm install
+```
 
-Create `.env` inside the `backend/` directory (or edit the included template):
+```bash
+cd frontend
+npm install
+```
+
+Configure the backend environment variables before starting the API. Use the category-only seed command to add the default categories without clearing application data.
+
+## 7. Environment Variables
+
+Create `backend/.env` using the following keys. Replace the placeholders with values for your environment; do not commit this file or real secrets.
 
 ```env
 PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/resolvex
-JWT_SECRET=resolvex_super_secret_jwt_key_2026_safe_and_secure
+MONGO_URI=mongodb+srv://<database-user>:<url-encoded-password>@<cluster-host>/<database-name>?retryWrites=true&w=majority
+JWT_SECRET=<a-long-random-secret>
 NODE_ENV=development
+ALLOWED_ORIGINS=http://localhost:5173
 ```
 
-### 3. Install Dependencies & Seed Database
+`ALLOWED_ORIGINS` is optional; the backend has local development defaults. When `MONGO_URI` is configured but cannot connect, the backend exits rather than silently switching to an in-memory database.
 
-#### Backend:
-```bash
-cd backend
-npm install
-npm run seed
-```
+## 8. How to Run the Application
 
-To add the default complaint categories to the database configured by `backend/.env` without clearing existing users, complaints, or categories, run:
-```bash
-npm run seed:categories
-```
-This command requires `MONGO_URI` to be set and only inserts missing default categories.
+Start the backend in one terminal:
 
-#### Frontend:
-```bash
-cd frontend
-npm install
-```
-
----
-
-## 🏃 Running the Application
-
-### Start Backend API Server:
 ```bash
 cd backend
 npm run dev
 ```
-> Server runs at `http://localhost:5000`
 
-### Start Frontend Dev Server:
+Start the frontend in another terminal:
+
 ```bash
 cd frontend
 npm run dev
 ```
-> Web application runs at `http://localhost:5173`
 
----
+The API defaults to `http://localhost:5000`; Vite serves the frontend at `http://localhost:5173` and proxies `/api` requests to the backend.
 
-## 🔑 Default Test Credentials (Generated by Seeder)
+## 9. MongoDB Atlas Setup
 
-| Role | Email | Password | Department / Notes |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@resolvex.com` | `Admin@123` | Full system control |
-| **Staff 1** | `staff1@resolvex.com` | `Staff@123` | Technical Support |
-| **Staff 2** | `staff2@resolvex.com` | `Staff@123` | Billing & Accounts |
-| **User 1** | `user1@resolvex.com` | `User@123` | Sample end-user |
-| **User 2** | `user2@resolvex.com` | `User@123` | Sample end-user |
+1. Create an Atlas cluster and database user.
+2. Allow the development machine's IP address in the Atlas network access settings.
+3. Copy the application's connection string into `MONGO_URI`, replace the placeholders, and URL-encode special characters in the database user's password.
+4. Choose the database name in the connection string, then seed categories with:
 
----
+   ```bash
+   cd backend
+   npm run seed:categories
+   ```
 
-## 📡 Backend API Endpoints
+The category seeder adds missing defaults and leaves existing categories, users, and complaints untouched. The general `npm run seed` script is destructive: it clears users, categories, and complaints before inserting demo data. Do not run it against data you need to preserve.
 
-### Authentication & User Management
-- `POST /api/auth/register` — Register new user (Forced `User` role)
-- `POST /api/auth/login` — Authenticate and receive JWT token
-- `GET /api/auth/me` — Get authenticated user details
-- `PUT /api/auth/profile` — Update name/email/password
-- `GET /api/auth/admin/users` — List registered users (Admin only)
-- `PUT /api/auth/admin/users/:id/status` — Toggle user active status (Admin only)
-- `POST /api/auth/admin/staff` — Create staff account (Admin only)
-- `GET /api/auth/admin/staff` — List staff accounts (Admin & Staff)
+## 10. Authentication and Role-Based Access
 
-### Complaint Management
-- `POST /api/complaints` — Submit new complaint (User only)
-- `GET /api/complaints` — List complaints (Role-scoped & filterable)
-- `GET /api/complaints/:id` — Get complaint details & timeline
-- `PUT /api/complaints/:id/assign` — Assign staff member (Admin only)
-- `PUT /api/complaints/:id/status` — Update status & resolution notes (Staff / Admin)
-- `PUT /api/complaints/:id/priority-category` — Update priority/category (Admin only)
-- `POST /api/complaints/:id/comments` — Post comment/update on ticket
-- `POST /api/complaints/:id/feedback` — Submit 1-5 star rating & feedback (Owner User)
+Passwords are hashed with bcryptjs. Login returns a JWT that the frontend stores in browser `localStorage` and sends as a bearer token. Tokens expire after seven days. Backend middleware authenticates requests and checks roles; complaint access is additionally scoped by creator for Users and assignee for Staff, while Admins can access all complaints. Public registration creates User accounts; Admins can create Staff accounts.
 
-### Category Management & Dashboard Analytics
-- `GET /api/categories` — Get active complaint categories
-- `POST /api/categories` — Create category (Admin only)
-- `PUT /api/categories/:id` — Edit category (Admin only)
-- `DELETE /api/categories/:id` — Delete category (Admin only)
-- `GET /api/stats/dashboard` — Get role-tailored dashboard stats
+## 11. Code0 Usage
+
+Code0 was used to inspect the existing application, trace category loading and complaint authorization behavior, plan bounded changes, and assist with implementation and verification. Changes were kept within the requested scope and reviewed before validation.
+
+## 12. AI Development Experience
+
+AI assistance helped investigate existing code paths, identify the cause of authorization and category-data issues, and implement targeted backend changes. **Code0 suggestions were reviewed and manually validated** against the code and through the applicable syntax checks, frontend production build, and Atlas seed run. AI-generated output was not treated as verified without review.
+
+## 13. Specific Code0 Tasks
+
+- Hardened backend complaint detail and comment authorization for User, Staff, and Admin roles.
+- Filtered internal comments from user-facing complaint detail, list, dashboard, and comment responses.
+- Improved MongoDB Atlas connection handling and API startup reliability when a configured database is unavailable.
+- Added non-destructive category seeding for Atlas.
+- Traced the frontend category request through the backend route, controller, model, and seed/database setup; verified the frontend build and seeded the configured Atlas database to resolve the empty category list.
+- Added a non-destructive targeted seeder for the demo Admin and Staff accounts.
